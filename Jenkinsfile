@@ -52,7 +52,7 @@ pipeline {
             steps {
                 echo 'Verifica che l\'app sia attiva...'
                 sleep(time: 30, unit: 'SECONDS')
-                sh 'curl -f http://host.docker.internal:8088/scuola-di-musica/swagger-ui/index.html || (echo "Health check fallito" && exit 1)'
+                sh 'curl -f -o /dev/null -w "%{http_code}" http://host.docker.internal:8088/scuola-di-musica/swagger-ui/index.html | grep -q "200" || (echo "Health check fallito" && exit 1)'
             }
         }
     }
