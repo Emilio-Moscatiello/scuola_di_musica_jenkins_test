@@ -14,6 +14,7 @@
     <groupId>com</groupId>
     <artifactId>scuola-di-musica</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
     <name>Scuola di Musica</name>
     <description>Esercizio Spring Security - Scuola di Musica</description>
 
@@ -78,6 +79,13 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.1.0</version>
+        </dependency>
+
+        <!-- Tomcat esterno (provided: non incluso nel WAR) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Testing -->
