@@ -40,6 +40,24 @@ pipeline {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
+
+        stage('Deploy') {
+            steps {
+                echo 'Build immagine Docker e deploy...'
+                sh 'docker build -t scuola-di-musica .'
+                sh 'docker stop scuola-app || true'
+                sh 'docker rm scuola-app || true'
+                sh 'docker run -d --name scuola-app -p 8081:8080 scuola-di-musica'
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                echo 'Verifica che l\'app sia attiva...'
+                sleep(time: 20, unit: 'SECONDS')
+                sh 'curl -f http://host.docker.internal:8081/swagger-ui/index.html || (echo "Health check fallito" && exit 1)'
+            }
+        }
     }
 
     post {
