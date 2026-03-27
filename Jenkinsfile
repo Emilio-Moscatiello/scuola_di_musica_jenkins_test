@@ -43,8 +43,12 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo 'Deploy del WAR su Tomcat...'
-                sh 'cp target/*.war /opt/tomcat/webapps/scuola-di-musica.war'
+                echo 'Deploy del WAR su Tomcat tramite Manager API...'
+                sh '''
+                    curl -s -u jenkins:jenkins123 \
+                        "http://host.docker.internal:8088/manager/text/deploy?path=/scuola-di-musica&update=true" \
+                        --upload-file target/scuola-di-musica-0.0.1-SNAPSHOT.war
+                '''
             }
         }
 
