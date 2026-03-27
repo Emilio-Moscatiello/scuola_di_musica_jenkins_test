@@ -51,8 +51,19 @@ pipeline {
         stage('Health Check') {
             steps {
                 echo 'Verifica che l\'app sia attiva...'
-                sleep(time: 30, unit: 'SECONDS')
-                sh 'curl -f -o /dev/null -w "%{http_code}" http://host.docker.internal:8088/scuola-di-musica/swagger-ui/index.html | grep -q "200" || (echo "Health check fallito" && exit 1)'
+                sh '''
+                    for i in 1 2 3 4 5; do
+                        STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://host.docker.internal:8088/scuola-di-musica/swagger-ui/index.html)
+                        echo "Tentativo $i: HTTP $STATUS"
+                        if [ "$STATUS" = "200" ]; then
+                            echo "App attiva!"
+                            exit 0
+                        fi
+                        sleep 20
+                    done
+                    echo "Health check fallito dopo 5 tentativi"
+                    exit 1
+                '''
             }
         }
     }
